@@ -1,0 +1,51 @@
+name: Spring Boot CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Change to your deployment branch
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Build and Push Docker Image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker build -t myrepo/jwt_spring_app:latest .
+          docker tag myrepo/jwt_spring_app:latest myrepo/jwt_spring_app:${{ github.run_number }}
+          docker push myrepo/jwt_spring_app:latest
+          docker push myrepo/jwt_spring_app:${{ github.run_number }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            docker pull myrepo/jwt_spring_app:latest
+            docker stop jwt_spring_app || true
+            docker rm jwt_spring_app || true
+            docker run -d --name jwt_spring_app -p 8080:8080 myrepo/jwt_spring_app:latest
