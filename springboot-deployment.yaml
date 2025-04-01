@@ -18,8 +18,8 @@ spec:
         - name: springboot-app
           image: jwttest-app:latest
           env:
-#            - name: SPRING_DATASOURCE_URL
-#              value: "jdbc:mysql://mysql_db:3306/jwt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/jwt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
             - name: SPRING_DATASOURCE_USERNAME
               value: root
             - name: SPRING_DATASOURCE_PASSWORD

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-spring-boot-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Krystine-825/jwt.git  # Change to your repo
+    targetRevision: main  # Change to your branch
+    path: HEAD # Change to the correct directory in your repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default  # Change to your app's namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
