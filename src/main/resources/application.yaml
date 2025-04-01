@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Krystine-825/jwt.git  # Change to your repo
     targetRevision: main  # Change to your branch
-    path: manifests # Change to the correct directory in your repo
+    path: src/main/resources # Change to the correct directory in your repo
   destination:
     server: https://kubernetes.default.svc
     namespace: default  # Change to your app's namespace
