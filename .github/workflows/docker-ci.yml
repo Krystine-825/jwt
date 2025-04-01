@@ -56,3 +56,4 @@ jobs:
 #            docker stop jwt_spring_app || true
 #            docker rm jwt_spring_app || true
 #            docker run -d --name jwt_spring_app -p 8080:8080 myrepo/jwt_spring_app:latest
+#
